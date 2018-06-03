@@ -1,6 +1,8 @@
 import React from 'react';
 // import { Link } from 'react-router-dom';
 import SpeedInput from './Inputs/SpeedInput';
+import AttributeInput from './Inputs/AttributeInput';
+import AttributeBlock from './AttributeBlock';
 
 class CreateForm extends React.Component {
     state = {
@@ -29,21 +31,39 @@ class CreateForm extends React.Component {
             creatureType: "",
             alignment: "",
             armorClass: "",
-            hitPoints: 0,
+            hitPoints: "",
             speeds: [
                 {
                     type: "",
                     speed: 0
                 }
             ],
-            attributes: {
-                str: 0,
-                dex: 0,
-                con: 0,
-                int: 0,
-                wis: 0,
-                cha: 0
-            },
+            attributes: [
+                {
+                    name: "STR",
+                    value: ""
+                },
+                {
+                    name: "DEX",
+                    value: ""
+                },
+                {
+                    name: "CON",
+                    value: ""
+                },
+                {
+                    name: "INT",
+                    value: ""
+                },
+                {
+                    name: "WIS",
+                    value: ""
+                },
+                {
+                    name: "CHA",
+                    value: ""
+                }
+            ],
             savingThrows: [],
             skills: [],
             damageMods: [],
@@ -73,10 +93,20 @@ class CreateForm extends React.Component {
         });
     }
 
+    /* Change Handlers for Attribute Blocks */
     handleSpeedChange = (speed, index) => {
         this.setState((state) => {
             let newState = state;
             newState.creature.speeds[index] = speed;
+            return newState;
+        });
+    }
+
+    handleAttrChange = (attr, index) => {
+        this.setState((state) => {
+            let newState = state;
+            console.log(newState.creature.attributes[index]);
+            newState.creature.attributes[index].value = attr.value;
             return newState;
         });
     }
@@ -90,21 +120,23 @@ class CreateForm extends React.Component {
                     <input className="create-input" name="size" placeholder="Size" value={this.state.creature.size} />
                     <input className="create-input" name="creatureType" placeholder="Creature Type" value={this.state.creature.creatureType} />
                     <select className="create-input" name="alignment" value={this.state.creature.size}>
-                        <option value="" selected disabled>Choose Alignment...</option>
+                        <option value="" disabled>Choose Alignment...</option>
                         {this.state.alignments.map((alignment, i) => <option value={alignment} key={i}>{alignment} </option>)}
                     </select>
                     <input className="create-input" name="armorClass" placeholder="Armor Class" value={this.state.creature.armorClass} />
                     <input className="create-input" name="hitPoints" placeholder="Hit Points" value={this.state.creature.hitPoints} />
 
-                    <fieldset>
-                        <legend>Speed</legend>
-                        {
-                            this.state.creature.speeds.map((speed, i) => <SpeedInput changeHandler={ this.handleSpeedChange } speedTypes={this.state.speedTypes} speed={speed} index={i} key={i} />)
-                        }
-                        <span id="add-speed-input" onClick={this.addSpeedInput}>Add Another Speed</span>
-                    </fieldset>
+                    <AttributeBlock blockName="Speed"
+                        addNewInput={this.addSpeedInput}
+                        inputs={this.state.creature.speeds.map((speed, i) => <SpeedInput changeHandler={this.handleSpeedChange} speedTypes={this.state.speedTypes} speed={speed} index={i} key={i} />)}
+                    />
+
+                    <AttributeBlock blockName="Attributes"
+                        inputs={this.state.creature.attributes.map((attr, i) => <AttributeInput changeHandler={this.handleAttrChange} attr={attr} index={i} key={i} />)}
+                    />
+
                 </form>
-                <div>{ console.log(this.state.creature.speeds) }</div>
+                {JSON.stringify(this.state.creature)}
             </div>
         )
     }

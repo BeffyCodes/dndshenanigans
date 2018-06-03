@@ -13,7 +13,7 @@ class SpeedInput extends React.Component {
         return (
             <div>
                 <select name="type" className="speedType" value={this.props.speed.type} onChange={(e) => this.handleChange(e.target)}>
-                    <option value="" selected disabled>Choose Movement Type...</option>
+                    <option value="" disabled>Choose Movement Type...</option>
                     {this.props.speedTypes.map((type, i) => <option value={type} key={i}>{type}</option>)}
                 </select>
                 <input type="input" placeholder="Distance" name="speed" value={this.props.speed.speed} onChange={(e) => this.handleChange(e.target)}/>
