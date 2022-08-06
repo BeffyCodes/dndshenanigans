@@ -2,6 +2,7 @@ import React from 'react';
 // import { Link } from 'react-router-dom';
 import SpeedInput from './Inputs/SpeedInput';
 import AttributeInput from './Inputs/AttributeInput';
+import SavingThrowInput from './Inputs/SavingThrowInput';
 import AttributeBlock from './AttributeBlock';
 
 class CreateForm extends React.Component {
@@ -24,6 +25,14 @@ class CreateForm extends React.Component {
             "Fly",
             "Fly (hover)",
             "Swim"
+        ],
+        attributes: [
+            "STR",
+            "DEX",
+            "CON",
+            "INT",
+            "WIS",
+            "CHA"
         ],
         creature: {
             name: "",
@@ -64,7 +73,12 @@ class CreateForm extends React.Component {
                     value: ""
                 }
             ],
-            savingThrows: [],
+            savingThrows: [
+                {
+                    type: "",
+                    value: 0
+                }
+            ],
             skills: [],
             damageMods: [],
             senses: [],
@@ -93,6 +107,22 @@ class CreateForm extends React.Component {
         });
     }
 
+    addSavingThrowInput = () => {
+        this.setState((state) => {
+            let newState = state;
+            let newSavingThrows = newState.creature.savingThrows;
+
+            newSavingThrows.push({
+                type: "",
+                value: 0
+            });
+
+            newState.creature.savingThrows = newSavingThrows;
+
+            return newState;
+        });
+    }
+
     /* Change Handlers for Attribute Blocks */
     handleSpeedChange = (speed, index) => {
         this.setState((state) => {
@@ -107,6 +137,14 @@ class CreateForm extends React.Component {
             let newState = state;
             console.log(newState.creature.attributes[index]);
             newState.creature.attributes[index].value = attr.value;
+            return newState;
+        });
+    }
+
+    handleSavingThrowChange = (savingThrow, index) => {
+        this.setState((state) => {
+            let newState = state;
+            newState.creature.savingThrows[index] = savingThrow;
             return newState;
         });
     }
@@ -133,6 +171,11 @@ class CreateForm extends React.Component {
 
                     <AttributeBlock blockName="Attributes"
                         inputs={this.state.creature.attributes.map((attr, i) => <AttributeInput changeHandler={this.handleAttrChange} attr={attr} index={i} key={i} />)}
+                    />
+
+                    <AttributeBlock blockName="Saving Throws"
+                        addNewInput={this.addSavingThrowInput}
+                        inputs={this.state.creature.savingThrows.map((savingThrow, i) => <SavingThrowInput changeHandler={this.handleSavingThrowChange} attributes={this.state.attributes} savingThrow={savingThrow} index={i} key={i} />)}
                     />
 
                 </form>
